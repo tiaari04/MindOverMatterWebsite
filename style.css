@@ -1,0 +1,131 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0; /* Keep waves behind other content */
+}
+
+.wave {
+    position: absolute;
+    stroke: orange;
+    fill: none;
+    stroke-width: 1;
+    opacity: 0.9;
+    animation: moveWave linear infinite, changeBrightness infinite;
+    transform-origin: center;
+    z-index: -1; /* Waves behind the button and to-do list */
+}
+
+@keyframes moveWave {
+    0% {
+        transform: translate(var(--start-x), var(--start-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
+    }
+}
+
+@keyframes changeBrightness {
+    0%, 100% {
+        filter: brightness(0.7);
+    }
+    50% {
+        filter: brightness(1.5);
+    }
+}
+
+
+.connect-btn {
+    width: 200px;
+    height: 200px;
+    background-color: #3cc3d5;
+    border: 10px solid #fffdfd;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    left: 25%; /* Position the button to the left side */
+    top: 50%; /* Vertically center the button */
+    transform: translateY(-50%);
+}
+
+.connect-btn:hover {
+    background-color: #e9784e; /* Darker orange on hover */
+}
+
+.todo-list {
+    margin-left: 50px; /* Space between button and list */
+    padding: 20px;
+    width: 300px;
+    height: 500px;
+    background-color: #3cc3d5;
+    border: 10px solid #ddd;
+    border-radius: 10px;
+    position: absolute;
+    right: 25%; /* Position the list to the right side */
+    top: 50%; /* Vertically center the list */
+    transform: translateY(-50%);
+}
+
+
+.todo-list:hover {
+    background-color: #e9784e; /* Darker orange on hover */
+}
+
+.todo-list h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.todo-list ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.todo-list li {
+    margin-bottom: 10px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.todo-list input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.add-task-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-task-container input {
+    width: 70%;
+    padding: 5px;
+}
+
+.add-task-container button {
+    width: 25%;
+    padding: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-task-container button:hover {
+    background-color: #45a049;
+}
