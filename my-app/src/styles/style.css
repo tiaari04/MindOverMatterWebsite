@@ -6,45 +6,28 @@ body, html {
 }
 
 #container {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
-    z-index: 0; /* Keep waves behind other content */
+    padding: 0 10vw;
+    box-sizing: border-box;
+    position: relative;
 }
 
-.wave {
-    position: absolute;
-    stroke: orange;
-    fill: none;
-    stroke-width: 1;
-    opacity: 0.9;
-    animation: moveWave linear infinite, changeBrightness infinite;
-    transform-origin: center;
-    z-index: -1; /* Waves behind the button and to-do list */
+/* Main Components */
+.pomodoro-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    margin-right: 30px;
+    z-index: 1;
 }
-
-@keyframes moveWave {
-    0% {
-        transform: translate(var(--start-x), var(--start-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
-    }
-    100% {
-        transform: translate(var(--end-x), var(--end-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
-    }
-}
-
-@keyframes changeBrightness {
-    0%, 100% {
-        filter: brightness(0.7);
-    }
-    50% {
-        filter: brightness(1.5);
-    }
-}
-
 
 .connect-btn {
-    width: 200px;
+    width: 220px;
     height: 200px;
     background-color: #3cc3d5;
     border: 10px solid #fffdfd;
@@ -54,33 +37,30 @@ body, html {
     color: black;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    position: absolute;
-    left: 25%; /* Position the button to the left side */
-    top: 50%; /* Vertically center the button */
-    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+    z-index: 1;
 }
 
 .connect-btn:hover {
-    background-color: #e9784e; /* Darker orange on hover */
+    background-color: #e9784e;
 }
 
 .todo-list {
-    margin-left: 50px; /* Space between button and list */
     padding: 20px;
-    width: 300px;
+    width: 350px;
     height: 500px;
     background-color: #3cc3d5;
     border: 10px solid #ddd;
     border-radius: 10px;
-    position: absolute;
-    right: 25%; /* Position the list to the right side */
-    top: 50%; /* Vertically center the list */
-    transform: translateY(-50%);
+    box-sizing: border-box;
+    z-index: 1;
 }
 
-
 .todo-list:hover {
-    background-color: #e9784e; /* Darker orange on hover */
+    background-color: #e9784e;
 }
 
 .todo-list h2 {
@@ -130,3 +110,46 @@ body, html {
     background-color: #45a049;
 }
 
+/* Wave Container */
+.wave-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: -1; /* Ensures waves are behind all main content */
+}
+
+/* Wave Animation */
+.wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    stroke: orange;
+    fill: none;
+    stroke-width: 1;
+    opacity: 0.9;
+    animation: moveWave 5s linear infinite, changeBrightness 3s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes moveWave {
+    0% {
+        transform: translate(var(--start-x), var(--start-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
+    }
+    100% {
+        transform: translate(var(--end-x), var(--end-y)) rotate(var(--rotation-angle, 0deg)) scale(var(--scale, 1));
+    }
+}
+
+@keyframes changeBrightness {
+    0%, 100% {
+        filter: brightness(0.7);
+    }
+    50% {
+        filter: brightness(1.5);
+    }
+}
