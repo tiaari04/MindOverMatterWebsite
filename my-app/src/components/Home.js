@@ -12,6 +12,15 @@ const Home = () => {
     console.log("Home Component Rendered");
     console.log("Muse S Connected!");
   };
+  const redirectToHTML_puzzle = () => {
+    window.location.href = '/puzzle/puzzle.html'; // Path relative to the public directory
+  }
+  const redirectToHTML_meditate = () => {
+    window.location.href = '/meditate/meditate.html'; // Path relative to the public directory
+  }
+  const redirectToHTML_paint = () => {
+    window.location.href = '/paint/paint.html'; // Path relative to the public directory
+  }
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -37,8 +46,23 @@ const Home = () => {
         </button>
         {menuOpen && (
           <div className="menu-options">
-            <a href="/meditate" className="menu-option">Meditate</a>
-            <a href="/game" className="menu-option">Game</a>
+            <button 
+          className="menu-option"
+          onClick={redirectToHTML_paint}> 
+          Paint
+        </button>
+            <button 
+          className="menu-option"
+          onClick={redirectToHTML_meditate}> 
+          Meditate
+        </button>
+           
+        <button 
+          className="menu-option"
+          onClick={redirectToHTML_puzzle}> 
+          Puzzle
+        </button>
+        
           </div>
         )}
       </div>

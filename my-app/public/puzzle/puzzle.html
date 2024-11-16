@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer type="module"></script>
+    <title>Puzzle Game</title>
+  </head>
+  <body>
+    <!-- Go Back Button with added aria-label for better accessibility -->
+    <button class="go-back-btn" onclick="window.history.back();" aria-label="Go back to previous page">Go Back</button>
+    
+    <div class="container">
+      <div class="puzzle-wrapper">
+        <div class="cells"></div>
+        <div class="puzzle"></div>
+        <div class="final-img">
+          <div class="upload-img">
+            <!-- Button Group for image actions -->
+            <div class="btns">
+              <button class="img-btn btn random-btn">Get Random Image</button>
+              <label for="input-file" class="img-btn btn">Upload New Image</label>
+            </div>
+            <!-- Hidden File Input Triggered by the label -->
+            <input type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" style="display: none;" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Structure for Game Over -->
+      <div class="modal">
+        <div class="modal-content">
+          <h2 class="modal-heading">Game Over</h2>
+          <h3 class="modal-text">YOU WON 😍. <span class="attempt">5</span> wrong attempts</h3>
+          <button class="modal-btn btn">Start Again</button>
+        </div>
+      </div>
+      
+      <!-- Loader to indicate processing or animation -->
+      <div class="loader active"><img src="images/loader.gif" alt="Loading..." /></div>
+    </div>
+  </body>
+</html>

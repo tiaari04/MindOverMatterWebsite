@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Meditate from "./components/Meditate";
-//import "./styles/style.css";
+import "./styles/style.css";
 //import "./styles/home.css";
 //import "./styles/meditate.css";
 
