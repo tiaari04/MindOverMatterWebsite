@@ -48,7 +48,7 @@ const Meditate = () => {
           <div className="breathe-text">{isBreathingIn ? "Breathe In" : "Breathe Out"}</div>
         </div>
       </div>
-      <Wave />
+      {/* <Wave /> */}
     </div>
   );
 };
