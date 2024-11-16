@@ -1,11 +1,16 @@
 import numpy as np
-from pylsl import StreamInlet, resolve_stream
+import matplotlib.pyplot as plt
+from pylsl import StreamInlet, resolve_byprop
+from plyer import notification
 
 # Sampling rate for Muse 2
 SAMPLING_RATE = 256  # 256 Hz
 
 # Buffer size (1-second window of data)
 BUFFER_SIZE = SAMPLING_RATE
+
+# Duration for 2-minute average (in seconds)
+TWO_MINUTES = 120
 
 def calculate_beta_alpha_ratio(eeg_data, sampling_rate):
     """
@@ -27,10 +32,24 @@ def calculate_beta_alpha_ratio(eeg_data, sampling_rate):
     # Return Beta/Alpha ratio
     return beta_power / alpha_power if alpha_power != 0 else 0
 
+def low_focus(two_min_avg):
+    if two_min_avg > 0:
+        print("goign in")
+        show_notif()
+        
+
+def show_notif():
+    notification.notify(
+        title = 'Time to Refocus', 
+        message = 'Visit our app to help refocus.',
+        timeout = 10
+    )
+    
+    
+
 def main():
     print("Resolving EEG stream...")
-    streams = resolve_stream('type', 'EEG') 
-    print("here") # Find EEG streams
+    streams = resolve_byprop('type', 'EEG')  # Find EEG streams
     if not streams:
         print("No EEG streams found. Exiting.")
         return
@@ -38,24 +57,57 @@ def main():
     inlet = StreamInlet(streams[0])
     print("EEG stream resolved. Starting data collection...")
 
-    buffer = []
+    # Initialize buffers for each channel and a list for 2-minute averages
+    buffers = {0: [], 1: [], 2: [], 3: []}  # TP9, AF7, AF8, TP10
+    averages = []  # Store 1-second averages for 2-minute calculation
+
     print("Streaming data... Press Ctrl+C to stop.")
+    
     try:
+        time_counter = 0  # Time counter for the x-axis
         while True:
             # Pull a single sample from the EEG stream
             sample, timestamp = inlet.pull_sample(timeout=0.01)  # Wait up to 10 ms
             if sample is None:
                 continue  # Skip if no sample is received within the timeout
+            
+            # Add data to corresponding channel buffers
+            for channel in range(4):
+                buffers[channel].append(sample[channel])
 
-            buffer.append(sample[0])  # Use the TP9 channel (index 0)
+            # If all buffers reach 1 second, process the data
+            if all(len(buffers[channel]) >= BUFFER_SIZE for channel in buffers):
+                ratios = []
+                for channel in range(4):
+                    channel_data = buffers[channel][:BUFFER_SIZE]
+                    ratio = calculate_beta_alpha_ratio(channel_data, SAMPLING_RATE)
+                    ratios.append(ratio)
+                    # Clear the processed buffer
+                    buffers[channel] = buffers[channel][BUFFER_SIZE:]
 
-            # If buffer size reaches 1 second, process the data
-            if len(buffer) >= BUFFER_SIZE:
-                ratio = calculate_beta_alpha_ratio(buffer[:BUFFER_SIZE], SAMPLING_RATE)
-                print(f"Beta/Alpha Ratio: {ratio:.2f}")
+                # Calculate the average Beta/Alpha ratio for this 1-second window
+                average_ratio = np.mean(ratios)
+                averages.append(average_ratio)
 
-                # Clear the buffer
-                buffer = buffer[BUFFER_SIZE:]
+                # Plot the graph every second
+                plt.clf()  # Clear the current figure
+                plt.plot(range(len(averages)), averages, 'b-', label="Beta/Alpha Ratio")
+                plt.xlabel("Time (s)")
+                plt.ylabel("Beta/Alpha Ratio")
+                plt.title("Beta/Alpha Ratio Over Time")
+                plt.legend()
+                plt.pause(0.01)  # Pause to update the plot
+
+                # If we have 2 minutes of data, compute and print the 2-minute average
+                if len(averages) >= TWO_MINUTES:
+                    two_minute_average = np.mean(averages)
+                    print(f"2-Minute Average Beta/Alpha Ratio: {two_minute_average:.2f}")
+                    low_focus(two_minute_average)
+
+                    # Reset averages for the next 2-minute window
+                    averages = []
+
+                time_counter += 1
 
     except KeyboardInterrupt:
         print("\nStreaming stopped. Exiting program.")
