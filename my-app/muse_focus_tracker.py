@@ -10,7 +10,7 @@ SAMPLING_RATE = 256  # 256 Hz
 BUFFER_SIZE = SAMPLING_RATE
 
 # Duration for 2-minute average (in seconds)
-TWO_MINUTES = 120
+TWO_MINUTES = 10
 
 def calculate_beta_alpha_ratio(eeg_data, sampling_rate):
     """
@@ -33,10 +33,9 @@ def calculate_beta_alpha_ratio(eeg_data, sampling_rate):
     return beta_power / alpha_power if alpha_power != 0 else 0
 
 def low_focus(two_min_avg):
-    if two_min_avg > 0:
-        print("goign in")
+    if two_min_avg < 3.44:
+        print("Focus low! Triggering notification...")
         show_notif()
-        
 
 def show_notif():
     notification.notify(
@@ -44,8 +43,6 @@ def show_notif():
         message = 'Visit our app to help refocus.',
         timeout = 10
     )
-    
-    
 
 def main():
     print("Resolving EEG stream...")
@@ -62,15 +59,27 @@ def main():
     averages = []  # Store 1-second averages for 2-minute calculation
 
     print("Streaming data... Press Ctrl+C to stop.")
-    
+
+    # Prepare the plot
+    plt.ion()  # Interactive mode to update the graph in real-time
+    fig, ax = plt.subplots()
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Beta/Alpha Ratio")
+    ax.set_title("Beta/Alpha Ratio Over Time")
+    line, = ax.plot([], [], 'b-', label="Beta/Alpha Ratio")
+    ax.legend()
+
+    time_counter = 0  # Time counter for the x-axis
+    x_data = []  # Time data for plotting
+    y_data = []  # Beta/Alpha ratio data for plotting
+
     try:
-        time_counter = 0  # Time counter for the x-axis
         while True:
             # Pull a single sample from the EEG stream
             sample, timestamp = inlet.pull_sample(timeout=0.01)  # Wait up to 10 ms
             if sample is None:
                 continue  # Skip if no sample is received within the timeout
-            
+
             # Add data to corresponding channel buffers
             for channel in range(4):
                 buffers[channel].append(sample[channel])
@@ -88,14 +97,14 @@ def main():
                 # Calculate the average Beta/Alpha ratio for this 1-second window
                 average_ratio = np.mean(ratios)
                 averages.append(average_ratio)
+                x_data.append(time_counter)
+                y_data.append(average_ratio)
 
-                # Plot the graph every second
-                plt.clf()  # Clear the current figure
-                plt.plot(range(len(averages)), averages, 'b-', label="Beta/Alpha Ratio")
-                plt.xlabel("Time (s)")
-                plt.ylabel("Beta/Alpha Ratio")
-                plt.title("Beta/Alpha Ratio Over Time")
-                plt.legend()
+                # Update the plot every second
+                line.set_xdata(x_data)
+                line.set_ydata(y_data)
+                ax.relim()  # Recalculate the axis limits
+                ax.autoscale_view()  # Auto scale the view
                 plt.pause(0.01)  # Pause to update the plot
 
                 # If we have 2 minutes of data, compute and print the 2-minute average
@@ -104,13 +113,15 @@ def main():
                     print(f"2-Minute Average Beta/Alpha Ratio: {two_minute_average:.2f}")
                     low_focus(two_minute_average)
 
-                    # Reset averages for the next 2-minute window
+                    # Reset averages for the next 2-minute window (not affecting the graph)
                     averages = []
 
                 time_counter += 1
 
     except KeyboardInterrupt:
         print("\nStreaming stopped. Exiting program.")
+        plt.ioff()  # Turn off interactive mode
+        plt.show()  # Show the final plot
 
 if __name__ == "__main__":
     main()
