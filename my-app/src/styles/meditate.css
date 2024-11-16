@@ -14,16 +14,36 @@ body, html {
 .wave{
     stroke:rgb(128, 210, 235);
 }
+.timer-container {
+    width: 100%;
+    max-width: 400px;
+    height: 20px;
+    background-color: lightgreen;
+    border: 1px solid #000;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: -50px;
+    margin-bottom: 50px; /* Space between timer and meditate container */
+}
+
+.timer-bar {
+    width: 0;
+    height: 100%;
+    background-color: darkgreen;
+    transition: width linear 0s;
+}
 
 .meditate-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
+    width: 100vw;
+    height: 70vh; /* Adjust height to make space for the timer */
     position: relative;
     z-index: 1;
+    flex-direction: column; /* Align elements inside vertically */
 }
+
 
 .circle {
     width: 200px;
@@ -37,7 +57,7 @@ body, html {
     font-size: 24px;
     font-weight: bold;
     color: purple;
-    animation: breathe 5s infinite; /* Infinite animation for breathing effect */
+    animation: breathe 10s infinite; /* Infinite animation for breathing effect */
 }
 
 .breathe-text {
@@ -60,3 +80,4 @@ body, html {
         transform: scale(1.2); /* Expand to 120% of original size */
     }
 }
+
