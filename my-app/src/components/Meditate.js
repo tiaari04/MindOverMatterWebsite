@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 import Wave from "./Wave";
 import "../styles/meditate.css";  // Adjust the path accordingly
 
@@ -7,6 +8,7 @@ const Meditate = () => {
   const [isBreathingIn, setIsBreathingIn] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
   const totalTime = 2 * 60 * 1000; // 2 minutes in milliseconds
+  const navigate = useNavigate(); // Initialize the navigate function
 
   // Use an effect to alternate the breathing state every 5 seconds
   useEffect(() => {
@@ -35,15 +37,21 @@ const Meditate = () => {
 
   const progress = (elapsedTime / totalTime) * 100; // Calculate progress percentage
 
+  // Handle back button click
+  const handleBackClick = () => {
+    navigate("/"); // Navigate to the /home route
+  };
+
   return (
     <div id="container">
       <div className="meditate-container">
-      <div className="timer-container">
-        <div
-          className="timer-bar"
-          style={{ width: `${progress}%`, backgroundColor: "darkgreen" }}
-        ></div>
-      </div>
+      <button onClick={handleBackClick} className="back-button">Back to Home</button> {/* Back button */}
+        <div className="timer-container">
+          <div
+            className="timer-bar"
+            style={{ width: `${progress}%`, backgroundColor: "darkgreen" }}
+          ></div>
+        </div>
         <div className="circle">
           <div className="breathe-text">{isBreathingIn ? "Breathe In" : "Breathe Out"}</div>
         </div>
