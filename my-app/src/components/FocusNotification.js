@@ -21,23 +21,19 @@ const FocusNotification = () => {
     }
   };
 
-  // Fetching average every 2 mins
   useEffect(() => {
-    const interval = setInterval(fetchAverage, 120000);
-    return () => clearInterval(interval); // Cleanup on component unmount
+    const interval = setInterval(fetchAverage, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Use effect to trigger notification based on average value
   useEffect(() => {
-    if (average !== null && average > 3.43) {
+    if (average !== null && average > 4.5) {
       setNotification(true);
 
-      // Set timeout to hide notification after 10 seconds
       const timeout = setTimeout(() => {
-        setNotification(false); // Hide notification after 10 seconds
-      }, 10000);
+        setNotification(false); 
+      }, 5000);
 
-      // Clean up timeout when the component unmounts or when the notification is cleared
       return () => clearTimeout(timeout);
     }
   }, [average]);

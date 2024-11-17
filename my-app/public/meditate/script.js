@@ -56,13 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Fetch average every 2 minutes
-  setInterval(fetchAverage, 120000); // This fetches the average every 2 minutes
+  setInterval(fetchAverage, 5000); 
 
   // Function to show the notification
   const showFocusNotification = () => {
     // Only show notification if the average is above a certain threshold
-    if (average !== null && average > 3.43) {  
+    if (average !== null && average > 1) {  
       const notification = document.createElement('div');
       notification.classList.add('notification');
       notification.innerHTML = `<p>You're focused!</p>`;
@@ -78,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       notificationTimeout = setTimeout(() => {
         notification.remove();
-      }, 10000);
+      }, 5000);
     }
   };
 

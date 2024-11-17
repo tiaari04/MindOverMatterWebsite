@@ -26,35 +26,40 @@ new DragDrop()
   };
 
   // Fetch average every 2 minutes
-  setInterval(fetchAverage, 120000); // This fetches the average every 2 minutes
+  setInterval(fetchAverage, 5000); // This fetches the average every 2 minutes
 
   // Function to show the notification
   const showFocusNotification = () => {
-    // Only show notification if the average is above a certain threshold
-    if (average !== null && average > 3.43) {  
-        const container = document.querySelector('.container'); // Selects the element with class="container"
+    if (average !== null && average > 4.5) {
+      const container = document.querySelector('.container'); // Selects the element with class="container"
   
-        // Check if the container exists
-        if (!container) {
-          console.error('Error: Container element not found.');
-          return; // Exit the function to prevent further errors
-        }
-      
-        const notification = document.createElement('div');
-        notification.classList.add('notification');
-        notification.innerHTML = `<p style="background: orange;">You're focused!</p>`;
-        
-        // Append the notification to the container
-        container.appendChild(notification);
-
-      // Hide notification after 10 seconds
-      if (notificationTimeout) {
-        clearTimeout(notificationTimeout); // Clear any existing timeout
+      // Check if the container exists
+      if (!container) {
+        console.error('Error: Container element not found.');
+        return; // Exit the function to prevent further errors
       }
-
+  
+      // Check if a notification already exists
+      let notification = container.querySelector('.notification');
+      if (!notification) {
+        // Create the notification if it doesn't exist
+        notification = document.createElement('div');
+        notification.classList.add('notification');
+        container.appendChild(notification);
+      }
+  
+      // Update the notification content
+      notification.innerHTML = `<p style="background: orange;">You're focused!</p>`;
+  
+      // Clear any existing timeout
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+      }
+  
+      // Set a timeout to remove the notification after 5 seconds
       notificationTimeout = setTimeout(() => {
         notification.remove();
-      }, 10000);
+      }, 5000);
     }
   };
 showFocusNotification()

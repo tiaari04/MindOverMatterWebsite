@@ -67,7 +67,7 @@ const drawRect = (e) => {
  // Function to show the notification
  const showFocusNotification = () => {
    // Only show notification if the average is above a certain threshold: average !== null && average > 3.43
-   if (true) {  
+   if (average !== null && average > 4.5) {  
      const notification = document.createElement('div');
      notification.classList.add('notification');
      notification.innerHTML = `<p>You're focused!</p>`;
