@@ -38,6 +38,55 @@ const drawRect = (e) => {
     ctx.fillRect(e.offsetX, e.offsetY, prevMouseX - e.offsetX, prevMouseY - e.offsetY);
 }
 
+ // Focus Notification Logic
+ let average = null;
+ let notificationTimeout = null;
+
+ // Fetch the average from the server
+ const fetchAverage = async () => {
+   try {
+     const response = await fetch("http://localhost:5001/get-average");
+     if (response.ok) {
+       const data = await response.json();
+       const fetchedAverage = data.two_minute_average;
+       console.log("2-Minute Average:", fetchedAverage);
+
+       average = fetchedAverage;
+       showFocusNotification();
+     } else {
+       console.log("No data available yet.");
+     }
+   } catch (error) {
+     console.error("Error fetching average:", error);
+   }
+ };
+
+ // Fetch average every 2 minutes
+ setInterval(fetchAverage, 120000); // This fetches the average every 2 minutes
+
+ // Function to show the notification
+ const showFocusNotification = () => {
+   // Only show notification if the average is above a certain threshold: average !== null && average > 3.43
+   if (true) {  
+     const notification = document.createElement('div');
+     notification.classList.add('notification');
+     notification.innerHTML = `<p>You're focused!</p>`;
+     
+     // Append the notification to the body or a specific container
+     document.body.appendChild(notification);
+
+     // Hide notification after 10 seconds
+     if (notificationTimeout) {
+       clearTimeout(notificationTimeout); // Clear any existing timeout
+     }
+
+     notificationTimeout = setTimeout(() => {
+       notification.remove();
+     }, 10000);
+   }
+ };
+
+
 const drawCircle = (e) => {
     ctx.beginPath(); // creating new path to draw circle
     // getting radius for circle according to the mouse pointer
@@ -128,3 +177,4 @@ saveImg.addEventListener("click", () => {
 canvas.addEventListener("mousedown", startDraw);
 canvas.addEventListener("mousemove", drawing);
 canvas.addEventListener("mouseup", () => isDrawing = false);
+showFocusNotification()

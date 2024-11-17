@@ -14,6 +14,25 @@ html {
     --width: 40vw;
     --height: 24vw;
 }
+.notification {
+    position: absolute;
+    top: 10px; /* Adjust the distance from the top */
+    left: 50%;
+    transform: translateX(-50%); /* Centers the notification horizontally */
+    background-color: orange;
+    color: black !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 10; /* Make sure it's above other elements */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease-in-out; /* Optional: Animation for a smooth appearance */
+  }
 
 .container {
     padding: 30px;
